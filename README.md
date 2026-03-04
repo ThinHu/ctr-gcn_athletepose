@@ -1,12 +1,12 @@
 # AthletePose3D Action Recognition using CTR-GCN
 
-This repository/notebook contains a complete **PyTorch pipeline** for training a **Spatial-Temporal Graph Convolutional Network (CTR-GCN)** on the **AthletePose3D dataset**.
+This repository/notebook contains a complete **PyTorch pipeline** for training a **Channel-wise Topology Refinement Graph Convolution Network (CTR-GCN)** on the **AthletePose3D dataset**.
 
 It is designed to run efficiently in a **Kaggle Notebook environment** (Dual T4 or P100 GPUs) and handles dynamic dataset loading, data augmentation, and robust training regularization.
 
 ---
 
-# 📌 Project Overview
+# Project Overview
 
 Skeleton-based human action recognition requires modeling both the **spatial configurations of human joints** and their **temporal dynamics across frames**.
 
@@ -14,19 +14,13 @@ This project utilizes **Channel-wise Topology Refinement Graph Convolutional Net
 
 ---
 
-# ✨ Key Modifications & Features
+# Key Modifications & Features
 
 ### COCO 17-Joint Adaptation
 Replaced the default **NTU-RGB+D 25-joint graph** with a **standard 17-joint COCO skeleton graph**.
 
 ### 2D Coordinate Handling
-Configured the network to accept **2D inputs**:
-
-```
-in_channels = 2
-```
-
-(X, Y coordinates)
+Configured the network to accept **2D inputs**
 
 Also patched internal CTR-GCN **channel-reduction logic** to prevent **zero-channel tensor crashes**.
 
@@ -70,8 +64,8 @@ The DataLoader expects the **AthletePose3D dataset** extracted as `.npy` arrays 
 athletepose3d/
 ├── train/
 │   ├── S1/
-│   │   ├── squat_1_cam_1_coco.npy
-│   │   ├── jumping_jacks_1_cam_1_coco.npy
+│   │   ├── Axel_1_cam_1_coco.npy
+│   │   ├── Axel_1_cam_2_coco.npy
 │   │   └── ...
 │   └── S2/
 ├── test/
@@ -80,7 +74,7 @@ athletepose3d/
 
 **Note**
 
-The `train` and `test` directories are **combined into a single training pool** to maximize training samples.
+The `train` directory is used for traning.
 
 The `valid` directory is used for **strict model evaluation**.
 
@@ -96,8 +90,16 @@ The project runs using the **standard Kaggle PyTorch environment**.
 ### Required Libraries
 
 ```python
-import torch
+import math
 import numpy as np
+import torch
+import torch.nn as nn
+from torch.autograd import Variable
+from torch.utils.data import Dataset, DataLoader
+import torch.optim as optim
+import os
+import re
+import glob
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
@@ -111,25 +113,28 @@ The project is divided into sequential executable notebook blocks.
 
 ---
 
-## 1️⃣ Graph Definition
+## Graph Definition
 
 Defines the **GraphCOCO class**, establishing the **inward/outward physical connections** of the **17-joint human skeleton**.
 
 ---
 
-## 2️⃣ CTR-GCN Architecture
+## CTR-GCN Architecture
 
-Contains the core spatial-temporal blocks:
+Contains the core spatial-temporal blocks with channel-wise refinemnet technique:
 
 - `TemporalConv`
 - `MultiScale_TemporalConv`
 - `CTRGC`
+- `unit_tcn`
+- `TCN_GCN_unit`
+- `CTRGCN_Model`
 
 and the final **classification model**.
 
 ---
 
-## 3️⃣ Dataset & DataLoader
+## Dataset & DataLoader
 
 Contains the `AthletePose3DDataset` class.
 
@@ -141,7 +146,7 @@ Responsibilities include:
 
 ---
 
-## 4️⃣ Training Loop
+## Training Loop
 
 Executes the full training process.
 
@@ -154,15 +159,11 @@ Executes the full training process.
 | Base Learning Rate | 0.05 |
 | Early Stop Patience | 20 |
 
-When a **new highest validation accuracy** is reached, the model is saved as:
-
-```
-best_ctrgcn.pth
-```
+When a **new highest validation accuracy** is reached, the model is saved.
 
 ---
 
-# 📊 Evaluation & Metrics
+# Evaluation & Metrics
 
 The final evaluation cell generates:
 
@@ -182,15 +183,8 @@ Outputs:
 
 for **all 18 target classes**.
 
----
 
-# 📝 Author
-
-**Nguyễn Nhật Thiên Hữu**
-
----
-
-# 📚 Acknowledgments
+# Acknowledgments
 
 ### CTR-GCN
 Based on the paper:
