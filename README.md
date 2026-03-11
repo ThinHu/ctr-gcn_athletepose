@@ -24,3 +24,10 @@ The DataLoader expects raw `.npy` arrays organized as follows:
 2. **Model Initialization:** Initializes the 10-layer CTR-GCN architecture, patched to handle 2-channel (X, Y) input without dimensionality crashes.
 3. **Training Loop:** Processes batches (size 32) using SGD with Nesterov momentum, profiling data-loading vs. network-compute bottlenecks, and saving the best weights (best_ctrgcn.pth).
 4. **Inference & Metrics:** Evaluates the optimal model against the validation set, plotting a heatmap of misclassifications to identify overlapping athletic movements.
+
+## Acknowledgements
+
+This project builds upon the foundational work and codebase of the CTR-GCN framework and AthletePose3D Dataset upon here:
+
+* [Uason-Chen/CTR-GCN](https://github.com/Uason-Chen/CTR-GCN.git)
+* [calvinyeungck/AthletePose3D](https://github.com/calvinyeungck/AthletePose3D.git)
