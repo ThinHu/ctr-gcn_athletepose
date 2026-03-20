@@ -1,0 +1,11 @@
+torch>=2.0.0
+numpy
+matplotlib
+seaborn
+scikit-learn
+jupytertorch>=2.0.0
+numpy
+matplotlib
+seaborn
+scikit-learn
+jupyter
