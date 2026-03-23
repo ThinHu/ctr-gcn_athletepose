@@ -17,7 +17,7 @@ ctr-gcn_athletepose/
 │   ├── valid/              
 │   └── test/               
 ├── notebooks/              # Jupyter notebooks for exploration & visualization
-│   └── 01_training_experiment.ipynb
+│   └── notebook.ipynb
 ├── src/                    # Source code for the project
 │   ├── __init__.py
 │   ├── data/               # Data loaders and dataset classes
