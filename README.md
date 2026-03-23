@@ -52,13 +52,13 @@ ctr-gcn_athletepose/
    `pip install -r requirements.txt`
 
 2. Run training:
-   `python main.py --data_path /path/to/athletepose3d --batch_size 16`## Quick Start
+   `python main.py --data_path /path/to/athletepose3d --batch_size 16`
 
 1. Install dependencies:
    `pip install -r requirements.txt`
 
 2. Run training:
-   `python main.py --data_path /path/to/athletepose3d --batch_size 16`vv
+   `python main.py --data_path /path/to/athletepose3d --batch_size 16`
 
 ## Acknowledgements
 
